@@ -18,17 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-@Tag(
-        name = "Chef Controller",
-        description = "get all chefs"
-)
+
 @RestController
-@RequestMapping("/chefs")
+@RequestMapping("/api/chef")
 public class ChefController {
     @Autowired
     private ChefService chefService;
     
-    @GetMapping("/all-chefs")
+    @GetMapping("/getAll")
     public ResponseEntity<List<ChefDto>> getAllChefs() throws SystemException {
         return ResponseEntity.ok(chefService.getAllChefs());
     }

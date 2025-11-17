@@ -1,18 +1,19 @@
 package com.spring.boot.resturantbackend.controllers.vm;
 
-import jakarta.validation.constraints.NotEmpty;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-public class RequestOrderVm {
+public class OrderVm {
 	
-    List<OrderVm> orders;
+	private Long id;
+	private Long quantity;
+
 }

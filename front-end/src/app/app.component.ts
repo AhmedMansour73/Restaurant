@@ -9,12 +9,16 @@ import {AuthService} from '../service/security/auth.service';
 })
 export class AppComponent {
 
-  constructor(private authService:AuthService) {
+  constructor(private authService:AuthService , private router:Router) {
 
   }
 
   isUserLogin(): boolean{
     return this.authService.isUserLogin();
+  }
+
+  isProductRoute(): boolean {
+    return this.router.url.startsWith('/products') || this.router.url.startsWith('/category/');
   }
 
 }

@@ -212,4 +212,20 @@ public class ProductServiceImpl implements ProductService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+	@Override
+	public  List<ProductDto> getProductsByIds(List<Long> productIds) {
+		 try {
+	            if (productIds.isEmpty()) {
+	                throw new SystemException("error.empty.list.products");
+	            }
+	            
+	           return productRepo.findAllById(productIds).stream().map(ProductMapper.PRODUCT_MAPPER::toProductDto).toList();
+	           
+	        } catch (Exception e) {
+	            throw new RuntimeException(e.getMessage());
+	        }
+		
+		
+	}
 }

@@ -27,14 +27,14 @@ public class ProductController {
     }
 
 
-    @GetMapping("/all-products/{id}")
+    @GetMapping("/all-ProductsByCategoryId/{id}")
     public ResponseEntity<ProductResponseVm> getAllProductsByCategoryId(@PathVariable Long id, @RequestParam int page, @RequestParam int size)
             throws SystemException {
         return ResponseEntity.ok(productService.getAllProductsByCategoryId(id, page, size));
     }
 
 
-    @GetMapping("/all-products-by-key")
+    @GetMapping("/search-all-products-by-key")
     public ResponseEntity<ProductResponseVm> getAllProductsByKey(@RequestParam String key, @RequestParam int page, @RequestParam int size)
             throws SystemException {
         return ResponseEntity.ok(productService.getAllProductsByKey(key, page, size));

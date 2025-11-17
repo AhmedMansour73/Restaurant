@@ -21,8 +21,10 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     @Column(nullable = false, unique = true)
     private String username;
+    
     @Column(nullable = false)
     private String password;
     @OneToOne(mappedBy = "account")
@@ -39,7 +41,9 @@ public class Account {
     private List<Role> roles = new ArrayList<>();
     @OneToMany(mappedBy = "account")
     private List<ContactInfo> contacts;
-    @OneToMany(mappedBy = "account")
+    
+    @OneToMany(mappedBy = "account" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
+    
     private String enabled;
 }

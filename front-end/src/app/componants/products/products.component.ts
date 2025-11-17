@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ProductService} from "../../../service/product.service";
 import {Product} from "../../../model/product";
 import {ActivatedRoute} from '@angular/router';
+import {CardService} from '../../../service/card.service';
+import {CardItem} from '../../../model/card-item';
 
 @Component({
   selector: 'app-products',
@@ -11,16 +13,24 @@ import {ActivatedRoute} from '@angular/router';
 export class ProductsComponent implements OnInit{
 
   products: Product[]=[];
-  // productsByCatID: Product[]=[];
+
+  messageAr: string="";
+  messageEn: string="";
+
+  page: number=1;
+  pageLength: number=10;
+  collectionSize: number=60;
+
+
 
   ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe(() => this.lodeProducts() );
+    this.activatedRoute.paramMap.subscribe(() => this.loadProducts() );
   }
 
-  constructor(private productService: ProductService ,private activatedRoute: ActivatedRoute){
-  }
+  constructor(private productService: ProductService ,private activatedRoute: ActivatedRoute
+              , private cardService: CardService ){}
 
-  lodeProducts(){
+  loadProducts(){
     let hasCateortId =  this.activatedRoute.snapshot.paramMap.has("id");
     let hasProductName =  this.activatedRoute.snapshot.paramMap.has("key");
     if(hasCateortId){
@@ -30,46 +40,82 @@ export class ProductsComponent implements OnInit{
       //     this.getProductsByCategoryID(id);
       //   }
       // });
-      this.getProductsByCategoryID(this.activatedRoute.snapshot.paramMap.get("id"));
+      this.getProductsByCategoryID(this.activatedRoute.snapshot.paramMap.get("id") , this.page , this.pageLength);
       return ;
     }
     if(hasProductName)
     {
-      this.serachByName(this.activatedRoute.snapshot.paramMap.get("key"));
+      this.serachByName(this.activatedRoute.snapshot.paramMap.get("key"), this.page , this.pageLength);
       return ;
     }
-    this.getProducts();
+    this.getProducts(this.page , this.pageLength);
 
   }
 
 
-  getProducts() {
-    this.productService.getAllProducts().subscribe(
+  getProducts(pageNumber , pageSize) {
+    this.productService.getAllProducts(pageNumber , pageSize).subscribe(
       value => {
-        this.products = value;
+        this.products = value.products;
+        this.collectionSize = value.totalProducts;
         // console.log(this.products)
+        this.messageAr = "";
+        this.messageEn = "";
+        // console.log(this.products)
+      },errorResponse =>{
+        this.products =[];
+        this.messageAr = errorResponse.error.bundleMessage.message_ar;
+        this.messageEn = errorResponse.error.bundleMessage.message_en;
       }
     );
   }
 
-  getProductsByCategoryID(id)
+  getProductsByCategoryID(id ,pageNumber , pageSize)
     {
-      this.productService.getProductsByCategoryID(id).subscribe(
+      this.productService.getProductsByCategoryID(id ,pageNumber , pageSize).subscribe(
         value => {
-          this.products = value;
+          this.products = value.products;
+          this.collectionSize = value.totalProducts;
+          this.messageAr = "";
+          this.messageEn = "";
           // console.log(this.products)
+        },errorResponse =>{
+          this.products =[];
+          this.messageAr = errorResponse.error.bundleMessage.message_ar;
+          this.messageEn = errorResponse.error.bundleMessage.message_en;
         }
       );
     }
 
-  serachByName(word)
+  serachByName(word,pageNumber , pageSize)
   {
-    this.productService.searchByProductName(word).subscribe(
+    this.productService.searchByProductName(word,pageNumber , pageSize).subscribe(
       value => {
-        this.products = value;
+        this.products = value.products;
+        this.collectionSize = value.totalProducts;
+        this.messageAr = "";
+        this.messageEn = "";
         // console.log(this.products)
+      },errorResponse =>{
+        this.products =[];
+        this.messageAr = errorResponse.error.bundleMessage.message_ar;
+        this.messageEn = errorResponse.error.bundleMessage.message_en;
       }
     );
   }
 
+  pageChange(){
+    this.loadProducts();
+    this.page=1;
+  }
+
+  changePageSize(event: Event) {
+    this.pageLength = +(<HTMLInputElement>event.target).value;
+    this.loadProducts()
+  }
+
+  addProduct(product: Product){
+    let cardItem = new CardItem(product);
+    this.cardService.addProduct(cardItem);
+  }
 }
