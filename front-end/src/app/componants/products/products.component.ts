@@ -4,6 +4,7 @@ import {Product} from "../../../model/product";
 import {ActivatedRoute} from '@angular/router';
 import {CardService} from '../../../service/card.service';
 import {CardItem} from '../../../model/card-item';
+import {AuthService} from '../../../service/security/auth.service';
 
 @Component({
   selector: 'app-products',
@@ -21,6 +22,11 @@ export class ProductsComponent implements OnInit{
   pageLength: number=10;
   collectionSize: number=60;
 
+  // for make delete
+  selectedProduct: Product | null = null;
+  showDeleteModal: boolean = false;
+
+
 
 
   ngOnInit(): void {
@@ -28,7 +34,7 @@ export class ProductsComponent implements OnInit{
   }
 
   constructor(private productService: ProductService ,private activatedRoute: ActivatedRoute
-              , private cardService: CardService ){}
+              , private cardService: CardService , private authService:AuthService){}
 
   loadProducts(){
     let hasCateortId =  this.activatedRoute.snapshot.paramMap.has("id");
@@ -118,4 +124,52 @@ export class ProductsComponent implements OnInit{
     let cardItem = new CardItem(product);
     this.cardService.addProduct(cardItem);
   }
+
+
+  isUserAdmin(){
+    return this.authService.isUserAdmin();
+  }
+
+
+  // for make Delete
+
+  DeleteProduct(pro: Product) {
+    this.selectedProduct = pro;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.selectedProduct = null;
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete() {
+    if (!this.selectedProduct)  {
+      alert('No product selected!');
+      return;
+    }
+
+    const productId = this.selectedProduct.id;
+
+    this.productService.deleteProductById(productId).subscribe(
+      res => {
+
+        // this.products = this.products.filter(p => p.id !== this.selectedProduct.id);
+        this.closeDeleteModal();
+        alert(res);
+        this.loadProducts();
+
+      },
+      err =>{
+        this.closeDeleteModal();
+        alert("Error:  " + err.message);
+      }
+    );
+
+  }
+  // this.activatedRoute.snapshot.paramMap.has("id");
+
+
+
+
 }

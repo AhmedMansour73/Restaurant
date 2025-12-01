@@ -15,10 +15,11 @@
               <button class="btn btn-outline-warning btn-sm text-dark fw-bold" (click)="addProduct(pro)">
                 <i class="bi bi-cart-plus"></i> Add to Cart
               </button>
-              <button class="btn btn-outline-primary btn-sm fw-bold" (click)="editProduct(pro)">
+              <button *ngIf="isUserAdmin()" class="btn btn-outline-primary btn-sm fw-bold" (click)="editProduct(pro)">
                 <i class="bi bi-pencil-square"></i> Edit
               </button>
-              <button class="btn btn-outline-danger btn-sm fw-bold" (click)="deleteProduct(pro)">
+              <button *ngIf="isUserAdmin()" class="btn btn-outline-danger btn-sm fw-bold" (click)="DeleteProduct(pro)">
+
                 <i class="bi bi-trash"></i> Delete
               </button>
             </div>
@@ -51,6 +52,31 @@
     </div>
   </div>
 </div>
+
+<!-- For Delete -->
+<div class="modal" tabindex="-1"
+     [ngClass]="{'show d-block': showDeleteModal}"
+     style="background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete <strong>{{selectedProduct?.name}}</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!---->
+
 
 <!-- Message Bundle -->
 <!--<div *ngIf="products.length ===0 " class="bundle container mt-4">-->

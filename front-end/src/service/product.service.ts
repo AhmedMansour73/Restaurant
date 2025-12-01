@@ -38,4 +38,9 @@ export class ProductService {
     );
   }
 
+  // for Delete By id
+  deleteProductById(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/delete-product-id/${id}`);
+  }
+
 }

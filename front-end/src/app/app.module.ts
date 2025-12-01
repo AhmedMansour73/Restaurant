@@ -18,6 +18,9 @@ import {AuthInterceptor} from '../service/inertceptor/auth.interceptor';
 import {AuthGuard} from '../service/guard/auth.guard';
 import {NoauthGuard} from '../service/guard/noauth.guard';
 import {NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
+import { OrderCodeComponent } from './componants/order-code/order-code.component';
+import { AddNewProductComponent } from './componants/add-new-product/add-new-product.component';
+import {FormsModule} from '@angular/forms';
 
 // routes: Routes = [];
 
@@ -36,6 +39,15 @@ export const routes: Routes = [
 
   {path: 'login', component: LoginComponent , canActivate: [NoauthGuard]},
   {path: 'signup', component: SignupComponent , canActivate: [NoauthGuard]},
+
+  {path: 'order-code/:code/totalNumber/:totalNumber/totalPrice/:totalPrice', component: OrderCodeComponent , canActivate: [AuthGuard]},
+
+  // add new product
+
+  {path: 'add-new-product', component: AddNewProductComponent , canActivate: [AuthGuard]},
+  {path: 'delete-product-id/:id', component: AddNewProductComponent , canActivate: [AuthGuard]},
+
+
   // http://localhost:4200/
   {path: '', redirectTo: '/products', pathMatch: 'full'},
 
@@ -60,13 +72,16 @@ export const routes: Routes = [
     ChefsComponent,
     ContactInfoComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    OrderCodeComponent,
+    AddNewProductComponent
   ],
   imports: [
     RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'}),
     BrowserModule,
     HttpClientModule,
-    NgbPaginationModule
+    NgbPaginationModule,
+    FormsModule
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' }

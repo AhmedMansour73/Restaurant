@@ -8,11 +8,19 @@ import lombok.Setter;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
+@Schema(
+		name= "RequestOrderVm",
+		description = "Save order related to user with products"
+)
 public class RequestOrderVm {
-	
+	@Schema(
+			description = "This list is OrderVm"
+	)
     List<OrderVm> orders;
 }

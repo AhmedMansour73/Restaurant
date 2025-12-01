@@ -3,11 +3,15 @@ package com.spring.boot.resturantbackend.services.impl;
 import com.spring.boot.resturantbackend.controllers.vm.ProductResponseVm;
 import com.spring.boot.resturantbackend.dto.ProductDto;
 import com.spring.boot.resturantbackend.mappers.ProductMapper;
+import com.spring.boot.resturantbackend.models.Category;
 import com.spring.boot.resturantbackend.models.Product;
+import com.spring.boot.resturantbackend.repositories.CategoryRepo;
 import com.spring.boot.resturantbackend.repositories.ProductRepo;
 import com.spring.boot.resturantbackend.services.CategoryService;
 import com.spring.boot.resturantbackend.services.ProductService;
 import jakarta.transaction.SystemException;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,9 +27,13 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepo productRepo;
+    
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private CategoryRepo categoryRepo;
+    
     @Override
     public ProductResponseVm getAllProducts(int page, int size) {
         try {
@@ -63,15 +71,59 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+//    @Override
+//    public ProductDto createProduct(ProductDto productDto) {
+//        try {
+//            if (Objects.nonNull(productDto.getId())) {
+//                throw new SystemException("id.must_be.null");
+//            }
+//            Product product = ProductMapper.PRODUCT_MAPPER.toProduct(productDto);
+//            product = productRepo.save(product);
+//            return ProductMapper.PRODUCT_MAPPER.toProductDto(product);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e.getMessage());
+//        }
+//    }
+    
     @Override
+    @Transactional
     public ProductDto createProduct(ProductDto productDto) {
         try {
+            // 1-
             if (Objects.nonNull(productDto.getId())) {
                 throw new SystemException("id.must_be.null");
             }
+
+            Category category;
+
+            // 2-
+            if (productDto.getCategory() != null && productDto.getCategory().getId() != null) {
+                category = categoryRepo.findById(productDto.getCategory().getId())
+                        .orElseThrow(() -> new SystemException("category.not.found"));
+            } else if (productDto.getCategory() != null && productDto.getCategory().getName() != null) {
+                category = categoryRepo.findByName(productDto.getCategory().getName())
+                        .orElseGet(() -> {
+                            Category newCategory = new Category();
+                            newCategory.setName(productDto.getCategory().getName());
+                            newCategory.setLogo(productDto.getCategory().getLogo());
+                            newCategory.setFlag(productDto.getCategory().getFlag());
+                            return categoryRepo.save(newCategory);
+                        });
+            } else {
+                throw new SystemException("category.id.or.name.required");
+            }
+
+            // 3-
             Product product = ProductMapper.PRODUCT_MAPPER.toProduct(productDto);
+
+            // 4-
+            product.setCategory(category);
+
+            // 5-
             product = productRepo.save(product);
+
             return ProductMapper.PRODUCT_MAPPER.toProductDto(product);
+
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

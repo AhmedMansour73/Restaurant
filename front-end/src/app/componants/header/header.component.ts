@@ -10,26 +10,30 @@ import {SharedServiceService} from '../../../service/shared-service.service';
 })
 export class HeaderComponent {
 
-    constructor(private route : Router , private authService:AuthService , private sharedService: SharedServiceService) {
+    constructor(private router : Router , private authService:AuthService , private sharedService: SharedServiceService) {
 
     }
 
     search(key){
-      this.route.navigateByUrl('/search/'+key);
+      this.router.navigateByUrl('/search/'+key);
     }
 
     isUserLogin(): boolean{
       return this.authService.isUserLogin();
     }
 
+  isUserAdmin(){
+      return this.authService.isUserAdmin();
+  }
+
   logout() {
     this.authService.logout();
-    this.route.navigateByUrl("/login")
+    this.router.navigateByUrl("/login")
   }
 
   navigateIfEmpty(value: string) {
     if (!value || value.trim() === '') {
-      this.route.navigate(['/products']);
+      this.router.navigate(['/products']);
     }
   }
 
@@ -39,5 +43,13 @@ export class HeaderComponent {
   setActiveAll() {
     this.sharedService.setSelectedCategory('ALL');
   }
+
+
+//    Go To page Add
+//   GoToAddNewProduct(event: Event) {
+//     event.preventDefault();  // يمنع المتصفح من تحميل href التقليدي
+//     this.router.navigate(['/add-new-product']);
+//   }
+
 
 }

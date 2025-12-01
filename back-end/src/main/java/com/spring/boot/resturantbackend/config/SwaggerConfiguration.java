@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
                 title = "Resturant Endpoints",
                 description = "all apis for Resturant",
                 contact = @Contact(
-                        name = "Taher Elzoghby",
-                        email = "tataamen678@gmail.com",
-                        url = "https://www.linkedin.com/in/taher-elzoghby-99499b231/"
+                        name = "Ahmed Mansour",
+                        email = "0ahmedmansou3r@gmail.com",
+                        url = "https://www.linkedin.com/in/ahmed-mansour-952118364/"
                 ),
                 license = @License(
                         name = "resturant license",

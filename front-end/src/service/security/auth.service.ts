@@ -40,4 +40,9 @@ export class AuthService {
     sessionStorage.removeItem("token");
   }
 
+  isUserAdmin(): boolean{
+    return sessionStorage.getItem("role") &&
+      sessionStorage.getItem("role").includes("ADMIN");
+  }
+
 }

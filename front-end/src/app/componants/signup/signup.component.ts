@@ -32,6 +32,7 @@ export class SignupComponent implements OnInit {
       response =>{
         // got to page products if signup success
         sessionStorage.setItem("token", response.token);
+        sessionStorage.setItem("role", response.userRoles);
         this.router.navigateByUrl('/products');
       },errorRespo =>{
         console.log(errorRespo);

@@ -54,7 +54,10 @@ export class CardDetailsComponent implements OnInit
     // alert(JSON.stringify(requestOrderVm));
 
     this.orderService.sendOrderToBack(requestOrderVm).subscribe(
-      response =>alert(response)
+      response => {
+        this.router.navigate(['/order-code/'+ response.code +'/totalNumber/'+
+                            response.totalNumber+'/totalPrice/'+response.totalPrice], { replaceUrl: true });
+      }
     );
 
     this.cardService.totalPrice.next(0);
@@ -62,7 +65,6 @@ export class CardDetailsComponent implements OnInit
     this.cardService.cardItems = [];
 
 
-
-    this.router.navigate(['/products'], { replaceUrl: true });
+    // this.router.navigate(['/product'], { replaceUrl: true });
   }
 }

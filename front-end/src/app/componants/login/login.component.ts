@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(userName, password).subscribe(
       response => {
         sessionStorage.setItem("token", response.token);
+        sessionStorage.setItem("role", response.userRoles);
         this.router.navigateByUrl("/products");
       }, errorRespo => {
         this.messageAr = errorRespo.error.bundleMessage.message_ar;
